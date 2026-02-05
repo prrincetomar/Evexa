@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- PREMIUM HEADER -->
+<div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); border-radius: 12px; padding: 40px; margin-bottom: 40px; color: white; box-shadow: 0 10px 30px rgba(220, 38, 38, 0.2);">
+    <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 12px;">⚠️ Delete Event Permanently</h1>
+    <p style="font-size: 1.1rem; margin: 0; opacity: 0.95;">This action cannot be undone</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <!-- CRITICAL WARNING -->
+        <div style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left: 4px solid #dc2626; border-radius: 8px; padding: 25px; margin-bottom: 30px;">
+            <p style="margin: 0; color: #7f1d1d; font-weight: 600; font-size: 1.05rem;">🚨 Critical Action - This cannot be reversed!</p>
+            <p style="margin: 10px 0 0 0; color: #991b1b; font-weight: 500;">Once deleted, all event data, registrations, and related information will be permanently removed from the system.</p>
+        </div>
+
+        <!-- EVENT DETAILS CARD -->
+        <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 30px;">
+            <h5 style="font-weight: 700; color: #0f172a; margin-bottom: 20px;">Event Details</h5>
+            
+            <div style="display: grid; gap: 15px;">
+                <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #2563eb;">
+                    <p style="margin: 0; color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Title</p>
+                    <p style="margin: 8px 0 0 0; color: #0f172a; font-weight: 600; font-size: 1.1rem;">{{ event.title }}</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #10b981;">
+                        <p style="margin: 0; color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Status</p>
+                        <p style="margin: 8px 0 0 0; color: #0f172a; font-weight: 600;">{{ lifecycle|upper }}</p>
+                    </div>
+                    <div style="padding: 15px; background: #f8fafc; border-radius: 8px; border-left: 4px solid #06b6d4;">
+                        <p style="margin: 0; color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Created</p>
+                        <p style="margin: 8px 0 0 0; color: #0f172a; font-weight: 600;">{{ event.created_at|date:'M d, Y' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div style="display: flex; gap: 15px; justify-content: space-between;">
+            <a href="/events/{{ event.id }}/" style="display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; background: #f3f4f6; color: #334155; transition: all 0.3s ease; font-size: 1rem;" onmouseover="this.style.background='#e5e7eb'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#f3f4f6'; this.style.transform='translateY(0)';">← Cancel</a>
+            
+            <form method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" style="padding: 14px 32px; border-radius: 8px; border: none; background: #dc2626; color: white; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3); display: flex; align-items: center; gap: 8px;" onmouseover="this.style.background='#991b1b'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(220, 38, 38, 0.4)';" onmouseout="this.style.background='#dc2626'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(220, 38, 38, 0.3)';">✓ Yes, Delete Permanently</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

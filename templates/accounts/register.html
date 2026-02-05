@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-top: 40px; margin-bottom: 40px;">
+    <!-- Left side: Welcome message -->
+    <div>
+        <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 20px; color: #0f172a;">Join Us! 🚀</h1>
+        <p style="font-size: 1.1rem; color: #64748b; line-height: 1.7; margin-bottom: 30px;">Create your account and become part of our vibrant community. Discover events, join communities, and connect with people who share your passions.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #2563eb, #06b6d4); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.1rem;">1</div>
+                <p style="margin: 0; color: #334155; font-weight: 500;">Sign up in seconds</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981, #06b6d4); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.1rem;">2</div>
+                <p style="margin: 0; color: #334155; font-weight: 500;">Explore thousands of events</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #06b6d4, #2563eb); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.1rem;">3</div>
+                <p style="margin: 0; color: #334155; font-weight: 500;">Build your network today</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right side: Registration form -->
+    <div style="background: white; border-radius: 12px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 4px solid #10b981;">
+        <form method="post">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #1e293b; for: id_{{ field.name }};">{{ field.label }}</label>
+                    {% if field.field.widget.input_type == "textarea" %}
+                        <textarea name="{{ field.name }}" id="id_{{ field.name }}" class="form-control" style="padding: 10px 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 0.95rem; transition: all 0.3s ease; width: 100%; resize: vertical; min-height: 100px;" {% if field.field.required %}required{% endif %}></textarea>
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {% if field.errors %}<div style="color: #ef4444; font-size: 0.9rem; margin-top: 6px;">{{ field.errors }}</div>{% endif %}
+                    {% if field.help_text %}<small style="color: #64748b; display: block; margin-top: 4px;">{{ field.help_text|safe }}</small>{% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" style="display: block; width: 100%; background: linear-gradient(135deg, #10b981, #06b6d4); color: white; padding: 12px 20px; border: none; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); margin-bottom: 20px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(16, 185, 129, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(16, 185, 129, 0.3)';">Create My Account</button>
+        </form>
+
+        <hr style="margin: 20px 0;">
+
+        <p style="text-align: center; margin: 0; color: #64748b;">
+            Already have an account? <br/>
+            <a href="/accounts/login/" style="color: #10b981; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.color='#059669'" onmouseout="this.style.color='#10b981'">Login here</a>
+        </p>
+    </div>
+</div>
+
+<!-- Media query for mobile -->
+<style>
+    @media (max-width: 768px) {
+        [style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+{% endblock %}

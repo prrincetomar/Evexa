@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- PREMIUM HEADER -->
+<div style="background: linear-gradient(135deg, #ef4444 0%, #f97316 100%); border-radius: 12px; padding: 40px; margin-bottom: 40px; color: white; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.15);">
+    <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 12px;">❌ Cancel Event</h1>
+    <p style="font-size: 1.1rem; margin: 0; opacity: 0.95;">{{ event.title }}</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <!-- ALERT BOX -->
+        <div style="background: #fef2f2; border-left: 4px solid #ef4444; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+            <p style="margin: 0; color: #7f1d1d; font-weight: 500;">⚠️ You are about to cancel this event. This action cannot be undone.</p>
+        </div>
+
+        <!-- FORM CARD -->
+        <div style="background: white; border-radius: 12px; padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            <form method="post">
+                {% csrf_token %}
+
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 12px; color: #1e293b; font-size: 1rem;">Cancellation Reason (Optional)</label>
+                    <textarea name="cancellation_reason" rows="5" class="form-control" placeholder="Explain why this event is being cancelled..." style="border: 2px solid #e2e8f0; border-radius: 8px; padding: 12px; font-size: 0.95rem;"></textarea>
+                    <small style="color: #64748b; display: block; margin-top: 8px;">💡 Provide a clear reason to notify attendees about the cancellation</small>
+                </div>
+
+                <!-- EVENT INFO SUMMARY -->
+                <div style="background: #f8fafc; border-radius: 8px; padding: 15px; margin-bottom: 30px; border-left: 4px solid #2563eb;">
+                    <p style="margin: 0; color: #64748b; font-size: 0.9rem;"><strong>Event:</strong> {{ event.title }}</p>
+                    <p style="margin: 5px 0 0 0; color: #64748b; font-size: 0.9rem;"><strong>Date:</strong> {{ event.date }}</p>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: space-between;">
+                    <a href="/events/{{ event.id }}/" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; background: #f3f4f6; color: #334155; transition: all 0.3s ease;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6';">← Go Back</a>
+                    <button type="submit" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 32px; border-radius: 8px; border: none; background: #ef4444; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);" onmouseover="this.style.background='#dc2626'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(239, 68, 68, 0.4)';" onmouseout="this.style.background='#ef4444'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(239, 68, 68, 0.3)';">✓ Confirm Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

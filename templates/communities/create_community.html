@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="bg-white p-5 rounded-3 mb-5 shadow-sm border-start border-success border-5">
+            <div class="d-flex align-items-center mb-2">
+                <span class="fs-1 me-4">👥</span>
+                <div>
+                    <h1 class="mb-1">Create New Community</h1>
+                    <p class="text-muted mb-0">Bring people together around shared interests and passions</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm" style="border: none; border-radius: 12px; overflow: hidden;">
+            <form method="post" class="form-section">
+            {% csrf_token %}
+
+            <!-- SECTION 1: BASIC INFO -->
+            <div class="p-4 border-bottom" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+                <h5 class="fw-600 mb-1">👥 Community Information</h5>
+                <p class="small text-muted mb-4">Tell us about your community</p>
+
+                <div class="mb-4">
+                    <label class="form-label fw-600">{{ form.name.label }}</label>
+                    {{ form.name }}
+                    <small class="text-muted d-block mt-2">💡 Choose a name that reflects your community's purpose</small>
+                    {% if form.name.errors %}<div class="text-danger small mt-2">{{ form.name.errors }}</div>{% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-600">{{ form.description.label }}</label>
+                    {{ form.description }}
+                    <small class="text-muted d-block mt-2">📝 Describe what your community is about and its purpose</small>
+                    {% if form.description.errors %}<div class="text-danger small mt-2">{{ form.description.errors }}</div>{% endif %}
+                </div>
+
+                <div class="mb-0">
+                    <label class="form-label fw-600">{{ form.rules.label }}</label>
+                    {{ form.rules }}
+                    <small class="text-muted d-block mt-2">📋 Set clear guidelines and rules for your members</small>
+                    {% if form.rules.errors %}<div class="text-danger small mt-2">{{ form.rules.errors }}</div>{% endif %}
+                </div>
+            </div>
+
+            <!-- SECTION 2: CATEGORIES & TAGS -->
+            <div class="p-4 border-bottom" style="background: #fff;">
+                <h5 class="fw-600 mb-1">🏷️ Tags & Categories</h5>
+                <p class="small text-muted mb-4">Help people discover your community</p>
+
+                <div id="tag-container" class="mb-3" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    {% for checkbox in form.tags %}
+                        <label class="tag-pill" style="display: inline-block; padding: 8px 16px; border: 2px solid #e2e8f0; border-radius: 20px; background: white; cursor: pointer; transition: all 0.3s ease; font-weight: 500; user-select: none;">
+                            <input type="checkbox" name="tags" value="{{ checkbox.data.value }}" id="{{ checkbox.id_for_label }}" style="margin-right: 8px; cursor: pointer;">
+                            {{ checkbox.choice_label }}
+                        </label>
+                    {% endfor %}
+                </div>
+
+                {% if form.tags.errors %}
+                    <div class="alert alert-danger">{{ form.tags.errors }}</div>
+                {% endif %}
+
+                <p id="tag-warning" class="alert alert-warning" style="display:none;">
+                    ⚠️ You can select at most 3 tags.
+                </p>
+                <small class="text-muted d-block mt-3">🎯 Select up to 3 relevant tags so people can find your community easily</small>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="p-4" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); display: flex; justify-content: space-between; align-items: center;">
+                <a href="{% url 'community_list' %}" class="btn btn-lg btn-outline-secondary">← Cancel</a>
+                <button type="submit" class="btn btn-lg btn-success">👥 Create Community</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const maxTags = 3;
+    const tagPills = document.querySelectorAll(".tag-pill");
+    const warning = document.getElementById("tag-warning");
+
+    tagPills.forEach(pill => {
+        const checkbox = pill.querySelector("input");
+
+        if (checkbox.checked) {
+            pill.style.background = "#dcfce7";
+            pill.style.borderColor = "#10b981";
+            pill.style.color = "#065f46";
+        }
+
+        pill.addEventListener("click", function (e) {
+            if (!checkbox.checked) {
+                const checkedCount = document.querySelectorAll(".tag-pill input:checked").length;
+                if (checkedCount >= maxTags) {
+                    warning.style.display = "block";
+                    return;
+                }
+            }
+
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                pill.style.background = "#dcfce7";
+                pill.style.borderColor = "#10b981";
+                pill.style.color = "#065f46";
+            } else {
+                pill.style.background = "white";
+                pill.style.borderColor = "#e2e8f0";
+                pill.style.color = "#334155";
+            }
+            
+            warning.style.display = "none";
+        });
+    });
+</script>
+
+{% endblock %}

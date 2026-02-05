@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Event & Community Board</title>
+    {% load static %}
+
+    <!-- Bootstrap CSS (no integrity to avoid mismatches) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- MESSAGES -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">Event & Community</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/events/">Events</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/communities/">Communities</a></li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="/events/create/">Create Event</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/communities/create/">Create Community</a></li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ user.username }}</a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                                <li><a class="dropdown-item" href="/events/my/">My Events</a></li>
+                                <li><a class="dropdown-item" href="/communities/my/">My Communities</a></li>
+                                <li><a class="dropdown-item" href="/profile/">My Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="/accounts/logout/" class="px-3">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/accounts/login/">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGE CONTENT -->
+    <main class="flex-fill py-4">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+<footer style="
+    
+    padding:20px 10px;
+    background:#f5f5f5;
+    border-top:1px solid #ddd;
+    font-size:14px;
+">
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        flex-wrap:wrap;
+        max-width:1000px;
+        margin:auto;
+    ">
+
+        <!-- PROJECT INFO -->
+        <div style="margin-bottom:10px;">
+            <strong>Event & Community Board</strong><br>
+            <span>A Full Stack Academic Project</span>
+        </div>
+
+        <!-- QUICK LINKS -->
+        <div style="margin-bottom:10px;">
+            <strong>Quick Links</strong><br>
+            <a href="/">Home</a><br>
+            <a href="/events/">Events</a><br>
+            <a href="/communities/">Communities</a><br>
+            {% if user.is_authenticated %}
+                <a href="/profile/">My Profile</a>
+            {% endif %}
+        </div>
+
+        <!-- CONTACT -->
+        <div style="margin-bottom:10px;">
+            <strong>Contact</strong><br>
+            📞 Phone: Available on request<br>
+            💬 WhatsApp: Yes<br>
+            🔗 LinkedIn: <span>LinkedIn Profile</span>
+        </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:10px; color:#777;">
+        © 2026 Event & Community Board
+    </div>
+    <!-- Bootstrap JS bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

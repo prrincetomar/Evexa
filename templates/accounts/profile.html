@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="bg-white p-5 rounded-3 mb-5 shadow-sm border-start border-info border-5">
+    <div class="d-flex align-items-center">
+        <span class="fs-1 me-4">👤</span>
+        <div>
+            <h1 class="mb-1">My Profile</h1>
+            <p class="text-muted mb-0">Manage your personal information and preferences</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <!-- LEFT: PROFILE CARD -->
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm" style="border: none; border-radius: 12px; overflow: hidden;">
+            <div class="card-body text-center">
+                <div style="background: linear-gradient(135deg, var(--primary), var(--info)); height: 80px; margin: -2rem -2rem 1.5rem -2rem; display: flex; align-items: center; justify-content: center;">
+                    {% if user.profile.profile_pic %}
+                        <img src="{{ user.profile.profile_pic.url }}" class="rounded-circle" style="max-width: 100px; height: 100px; object-fit: cover; border: 4px solid white;">
+                    {% else %}
+                        <div class="rounded-circle" style="width: 100px; height: 100px; background-color: #dbeafe; display: flex; align-items: center; justify-content: center; font-size: 3rem; border: 4px solid white;">
+                            👤
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Profile Completion -->
+                <h6 class="mb-2 fw-600">Profile Completion</h6>
+                <div class="progress mb-3" role="progressbar" style="height: 8px; border-radius: 10px;">
+                    <div class="progress-bar bg-success" style="width: {{ profile_completion }}%; border-radius: 10px;"></div>
+                </div>
+                <small class="text-muted">{{ profile_completion }}% Complete</small>
+
+                <hr class="my-4">
+
+                {% if user.profile.full_name %}
+                    <h5 class="mb-1 fw-600">{{ user.profile.full_name }}</h5>
+                {% endif %}
+                <p class="text-muted small">@{{ user.username }}</p>
+
+                <hr class="my-3">
+
+                <div class="text-start">
+                    <p class="mb-2"><strong>📧 Email:</strong> <br><span class="text-muted">{{ user.email }}</span></p>
+                    
+                    <p class="mb-2">
+                        <strong>📱 Phone:</strong> <br>
+                        {% if user.profile.phone %}
+                            <span class="text-muted">{{ user.profile.phone }}</span>
+                        {% else %}
+                            <span class="text-muted fst-italic">Not provided</span>
+                        {% endif %}
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>🎂 Age:</strong> <br>
+                        {% if user.profile.age %}
+                            <span class="text-muted">{{ user.profile.age }} years old</span>
+                        {% else %}
+                            <span class="text-muted fst-italic">Not provided</span>
+                        {% endif %}
+                    </p>
+
+                    <p class="mb-3">
+                        <strong>📅 Joined:</strong> <br>
+                        <span class="text-muted">{{ user.date_joined|date:"M d, Y" }}</span>
+                    </p>
+                </div>
+
+                <hr class="my-3">
+
+                <h6 class="mb-3 fw-600">🎯 Interests</h6>
+                {% if user.profile.favourite_tags.exists %}
+                    {% for tag in user.profile.favourite_tags.all %}
+                        <span class="tag-pill">{{ tag.name }}</span>
+                    {% endfor %}
+                {% else %}
+                    <span class="text-muted fst-italic">No interests selected</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: EDIT FORM -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm" style="border: none; border-radius: 12px;">
+            <div class="card-header bg-white" style="border-bottom: 2px solid #f1f5f9; border-radius: 12px 12px 0 0;">
+                <h5 class="mb-0 fw-600">✏️ Edit Profile</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label class="form-label fw-600">Full Name</label>
+                        {{ form.full_name }}
+                        {% if form.full_name.errors %}<div class="text-danger small mt-2">{{ form.full_name.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Age</label>
+                            {{ form.age }}
+                            {% if form.age.errors %}<div class="text-danger small mt-2">{{ form.age.errors }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-600">Phone</label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}<div class="text-danger small mt-2">{{ form.phone.errors }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-600">Address</label>
+                        {{ form.address }}
+                        {% if form.address.errors %}<div class="text-danger small mt-2">{{ form.address.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-600">Bio</label>
+                        {{ form.bio }}
+                        <small class="text-muted d-block mt-2">📝 Tell us something about yourself</small>
+                        {% if form.bio.errors %}<div class="text-danger small mt-2">{{ form.bio.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-600">Profile Picture</label>
+                        {{ form.profile_pic }}
+                        <small class="text-muted d-block mt-2">📸 Upload a profile photo (JPG, PNG)</small>
+                        {% if form.profile_pic.errors %}<div class="text-danger small mt-2">{{ form.profile_pic.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-600">🎯 Favourite Interests (max 5)</label>
+                        <div id="fav-tags" class="mt-3">
+                            {% for checkbox in form.favourite_tags %}
+                                <label class="tag-pill">
+                                    {{ checkbox.tag }}
+                                    {{ checkbox.choice_label }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                        {% if form.favourite_tags.errors %}<div class="text-danger small mt-2">{{ form.favourite_tags.errors }}</div>{% endif %}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-grid gap-2 d-sm-flex justify-content-sm-between">
+                        <a href="/" class="btn btn-lg btn-outline-secondary">← Back</a>
+                        <button type="submit" class="btn btn-lg btn-info">💾 Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<h5 class="mb-4 fw-600">📊 Your Activity</h5>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card shadow-sm" style="border: none; border-radius: 12px; border-top: 4px solid var(--primary);">
+            <div class="card-body text-center py-4">
+                <div class="display-5 text-primary fw-bold mb-2">{{ created_events_count }}</div>
+                <p class="card-text text-muted mb-0">Events Created</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm" style="border: none; border-radius: 12px; border-top: 4px solid var(--success);">
+            <div class="card-body text-center py-4">
+                <div class="display-5 text-success fw-bold mb-2">{{ joined_events_count }}</div>
+                <p class="card-text text-muted mb-0">Events Joined</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm" style="border: none; border-radius: 12px; border-top: 4px solid var(--info);">
+            <div class="card-body text-center py-4">
+                <div class="display-5 text-info fw-bold mb-2">{{ joined_communities_count }}</div>
+                <p class="card-text text-muted mb-0">Communities Joined</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Set progress bar width
+    const progressBar = document.querySelector(".progress-bar-fill");
+    if (progressBar) {
+        const progress = progressBar.getAttribute("data-progress");
+        progressBar.style.width = progress + "%";
+    }
+
+    const checkboxes = document.querySelectorAll("#fav-tags input[type='checkbox']");
+    const maxAllowed = 5;
+
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener("change", function () {
+            const checkedCount = document.querySelectorAll(
+                "#fav-tags input[type='checkbox']:checked"
+            ).length;
+
+            if (checkedCount > maxAllowed) {
+                this.checked = false;
+                alert("You can select up to 5 favourite interests only.");
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

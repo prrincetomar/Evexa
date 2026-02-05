@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="bg-white p-4 rounded-3 mb-4 shadow-sm d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="mb-0">{{ community.name }}</h1>
+        <div class="small text-muted">Created on {{ community.created_at|date:"M d, Y" }}</div>
+    </div>
+    <div>
+        {% if status == "CREATOR" %}
+            <span class="badge badge-creator">CREATOR</span>
+        {% elif status == "MEMBER" %}
+            <span class="badge badge-member">MEMBER</span>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <p class="mb-2"><strong>👤 Created by:</strong> <span class="badge bg-primary">{{ community.created_by.username }}</span></p>
+                <p class="mb-3"><strong>📅 Created on:</strong> {{ community.created_at|date:"F j, Y" }}</p>
+
+                <h5 class="mt-4 mb-3">About this Community</h5>
+                <p class="text-muted">{{ community.description }}</p>
+
+                <div class="mt-4">
+                    <strong class="d-block mb-2">Tags</strong>
+                    {% for tag in community.tags.all %}
+                        <span class="tag-pill">{{ tag.name }}</span>
+                    {% empty %}
+                        <em class="text-muted">No tags</em>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Community Rules</h5>
+            </div>
+            <div class="card-body">
+                <p>{{ community.rules }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Membership</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-4"><strong>Total Members:</strong> <span class="badge bg-info">{{ member_count }}</span></p>
+
+                {% if user.is_authenticated %}
+                    {% if status == "CREATOR" %}
+                        <a href="/communities/edit/{{ community.id }}/" class="btn btn-primary">✏️ Edit Community</a>
+                    {% elif status == "MEMBER" %}
+                        <a href="/communities/leave/{{ community.id }}/" class="btn btn-danger" onclick="return confirm('Are you sure you want to leave this community?');">Leave Community</a>
+                    {% else %}
+                        <a href="/communities/join/{{ community.id }}/" class="btn btn-success" onclick="return confirm('Are you sure you want to join this community?');">Join Community</a>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted"><a href="/accounts/login/" class="link-primary">Login</a> to join this community</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card sticky-card text-center">
+            <div class="card-body">
+                <h6 class="card-title mb-3">Community Stats</h6>
+                <div class="mb-3">
+                    <div class="display-6 text-primary mb-1">{{ member_count }}</div>
+                    <div class="text-muted">Members</div>
+                </div>
+                <hr>
+                <p class="small text-muted mb-0">Community created on {{ community.created_at|date:"M d, Y" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

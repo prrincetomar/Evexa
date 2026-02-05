@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="bg-white p-5 rounded-3 mb-5 shadow-sm border-start border-primary border-5">
+    <div class="d-flex align-items-center">
+        <span class="fs-1 me-4">📋</span>
+        <div>
+            <h1 class="mb-1">My Events</h1>
+            <p class="text-muted mb-0">Manage events you've created and joined</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 mb-4">
+        <div class="card shadow-sm" style="border: none; border-radius: 12px;">
+            <div class="card-body">
+                <h5 class="card-title fw-600">🔍 Filter</h5>
+                <form method="get">
+                    <div class="mb-3">
+                        <label class="form-label fw-600">Show:</label>
+                        <select name="filter" class="form-control">
+                            <option value="all" {% if selected_filter == "all" %}selected{% endif %}>
+                                All Events
+                            </option>
+                            <option value="created" {% if selected_filter == "created" %}selected{% endif %}>
+                                Created by Me
+                            </option>
+                            <option value="joined" {% if selected_filter == "joined" %}selected{% endif %}>
+                                Joined by Me
+                            </option>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Apply Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        {% if events %}
+            <div class="cards-grid" style="grid-template-columns: 1fr;">
+                {% for event in events %}
+                    <div class="card shadow-sm" style="border: none; border-radius: 12px; overflow: hidden;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="flex-grow-1">
+                                    <a href="/events/{{ event.id }}/" class="h5 link-primary mb-1 d-block text-decoration-none">
+                                        {{ event.title }}
+                                    </a>
+                                    <div class="small text-muted">{{ event.date }} • {{ event.location }}</div>
+                                </div>
+                                <div class="d-flex gap-1 flex-wrap justify-content-end ms-2">
+                                    {% if event.status == "CREATOR" %}
+                                        <span class="badge badge-creator">CREATOR</span>
+                                    {% elif event.status == "MEMBER" %}
+                                        <span class="badge badge-member">MEMBER</span>
+                                    {% endif %}
+                                    
+                                    {% if event.lifecycle == "upcoming" %}
+                                        <span class="badge badge-upcoming">UPCOMING</span>
+                                    {% elif event.lifecycle == "ongoing" %}
+                                        <span class="badge badge-ongoing">ONGOING</span>
+                                    {% elif event.lifecycle == "completed" %}
+                                        <span class="badge badge-completed">COMPLETED</span>
+                                    {% elif event.lifecycle == "cancelled" %}
+                                        <span class="badge badge-cancelled">CANCELLED</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <p class="card-text text-muted mb-3">{{ event.description|truncatechars:180 }}</p>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3 py-2 border-top border-bottom">
+                                <div>
+                                    <small class="text-muted">👥 Participants: <strong>{{ event.join_count }}</strong>
+                                    {% if event.max_participants %}
+                                        / {{ event.max_participants }}
+                                    {% else %}
+                                        / ∞
+                                    {% endif %}</small>
+                                </div>
+                                <div>
+                                    {% for tag in event.tags.all %}
+                                        <span class="tag-pill small">{{ tag.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-sm-flex">
+                                {% if event.status == "CREATOR" %}
+                                    <a href="/events/edit/{{ event.id }}/" class="btn btn-sm btn-outline-secondary flex-grow-1">✏️ Edit</a>
+                                    <a href="/events/{{ event.id }}/" class="btn btn-sm btn-primary flex-grow-1">👁️ View</a>
+
+                                {% elif event.status == "MEMBER" and event.lifecycle != "completed" %}
+                                    <a href="/events/{{ event.id }}/" class="btn btn-sm btn-primary flex-grow-1">👁️ View</a>
+                                    <a href="/events/leave/{{ event.id }}/" class="btn btn-sm btn-danger flex-grow-1" 
+                                       onclick="return confirm('Are you sure you want to leave this event?');">
+                                        Leave
+                                    </a>
+
+                                {% elif event.status == "MEMBER" and event.lifecycle == "completed" %}
+                                    <a href="/events/{{ event.id }}/" class="btn btn-sm btn-primary flex-grow-1">👁️ View</a>
+                                    <span class="text-muted small">Event Closed</span>
+                                {% else %}
+                                    <a href="/events/{{ event.id }}/" class="btn btn-sm btn-primary flex-grow-1">👁️ View</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center py-5">
+                <h5>📭 No Events Yet</h5>
+                <p class="mb-0">
+                    {% if selected_filter == "created" %}
+                        You haven't created any events. <a href="/events/create/" class="link-primary">Create one now!</a>
+                    {% elif selected_filter == "joined" %}
+                        You haven't joined any events yet. <a href="/events/" class="link-primary">Browse events</a>
+                    {% else %}
+                        You have no events. <a href="/events/" class="link-primary">Explore events</a>
+                    {% endif %}
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

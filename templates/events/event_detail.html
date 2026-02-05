@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="bg-white p-4 rounded-3 mb-4 shadow-sm d-flex justify-content-between align-items-center">
+    <div>
+        <h1 class="mb-0">{{ event.title }}</h1>
+        <div class="small text-muted">{{ event.date }} • {{ event.location }}</div>
+    </div>
+    <div class="text-end">
+        {% if status == "CREATOR" %}
+            <span class="badge badge-creator">CREATOR</span>
+        {% elif status == "MEMBER" %}
+            <span class="badge badge-member">MEMBER</span>
+        {% endif %}
+        {% if event.lifecycle == "cancelled" %}
+            <span class="badge badge-cancelled">CANCELLED</span>
+        {% elif event.lifecycle == "completed" %}
+            <span class="badge badge-completed">COMPLETED</span>
+        {% elif event.lifecycle == "ongoing" %}
+            <span class="badge badge-ongoing">ONGOING</span>
+        {% elif event.lifecycle == "upcoming" %}
+            <span class="badge badge-upcoming">UPCOMING</span>
+        {% endif %}
+    </div>
+</div>
+
+{% if event.lifecycle == "cancelled" %}
+    <div class="alert alert-danger" role="alert">
+        <strong>⚠️ This event has been cancelled</strong>
+        {% if event.cancellation_reason %}
+            <br><strong>Reason:</strong> {{ event.cancellation_reason }}
+        {% endif %}
+    </div>
+{% elif event.lifecycle == "completed" %}
+    <div class="alert alert-info" role="alert">
+        <strong>✓ This event has been completed</strong>
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Event Details</h5>
+                <p class="mb-3">{{ event.description }}</p>
+
+                <ul class="list-unstyled small">
+                    <li><strong>📍 Location:</strong> {{ event.location }}</li>
+                    <li><strong>🏛️ Mode:</strong> {{ event.mode }}</li>
+                    <li><strong>🔗 Venue / Link:</strong> {{ event.venue_or_link }}</li>
+                    <li><strong>👤 Hosted by:</strong> <span class="badge bg-primary">{{ event.created_by.username }}</span></li>
+                    <li><strong>🎯 Interest:</strong> {{ event.interest }}</li>
+                    <li><strong>👥 Participants:</strong> <span class="badge bg-info">{{ join_count }}</span></li>
+                </ul>
+
+                <div class="mt-3">
+                    <strong class="d-block mb-2">Tags</strong>
+                    {% for tag in event.tags.all %}
+                        <span class="tag-pill">{{ tag.name }}</span>
+                    {% empty %}
+                        <em class="text-muted">No tags</em>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">📢 Announcements</h5>
+            </div>
+            <div class="card-body">
+                {% if announcements %}
+                    {% for ann in announcements %}
+                        <div class="alert alert-light border mb-3">
+                            <p class="mb-2">{{ ann.message }}</p>
+                            <small class="text-muted">By <strong>{{ ann.created_by.username }}</strong> on {{ ann.created_at|date:"M d, Y H:i" }}</small>
+                            {% if status == "CREATOR" and event.lifecycle not in "completed cancelled" %}
+                                <div class="mt-2">
+                                    <a href="/events/announcements/edit/{{ ann.id }}/" class="btn btn-sm btn-outline-primary">✏️ Edit</a>
+                                    <a href="/events/announcements/delete/{{ ann.id }}/" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this announcement?');">🗑 Delete</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No announcements yet.</p>
+                {% endif %}
+
+                {% if status == "CREATOR" and event.lifecycle in "upcoming ongoing" %}
+                    <hr>
+                    <h6 class="mt-4">Post New Announcement</h6>
+                    <form method="post" class="mt-3">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <textarea name="message" rows="3" class="form-control" placeholder="Write your announcement..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post Announcement</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card sticky-card">
+            <div class="card-body">
+                <h6 class="card-title mb-3">Actions</h6>
+                {% if user.is_authenticated %}
+                    {% if status == "CREATOR" %}
+                        {% if event.lifecycle in "upcoming ongoing" %}
+                            <a href="/events/edit/{{ event.id }}/" class="btn btn-primary w-100 mb-2">✏️ Edit Event</a>
+                            <a href="/events/cancel/{{ event.id }}/" class="btn btn-warning w-100">❌ Cancel Event</a>
+                        {% else %}
+                            <a href="/events/delete/{{ event.id }}/" class="btn btn-danger w-100" onclick="return confirm('This will permanently delete the event. Continue?');">🗑 Delete Event</a>
+                        {% endif %}
+                    {% elif status == "MEMBER" %}
+                        {% if event.lifecycle in "upcoming ongoing" %}
+                            <a href="/events/leave/{{ event.id }}/" class="btn btn-danger w-100">Leave Event</a>
+                        {% else %}
+                            <p class="text-muted text-center mb-0">Event Closed</p>
+                        {% endif %}
+                    {% else %}
+                        {% if event.lifecycle == "upcoming" %}
+                            <a href="/events/join/{{ event.id }}/" class="btn btn-success w-100">Join Event</a>
+                        {% else %}
+                            <p class="text-muted text-center mb-0">Event Closed</p>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted text-center"><a href="/accounts/login/" class="link-primary">Login</a> to join this event</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

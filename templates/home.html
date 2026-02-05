@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- PREMIUM HERO SECTION -->
+<div style="background: linear-gradient(135deg, #2563eb 0%, #06b6d4 50%, #10b981 100%); border-radius: 16px; padding: 80px 40px; margin-bottom: 60px; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(37, 99, 235, 0.15);">
+    <!-- Animated background elements -->
+    <div style="position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; background: rgba(255,255,255,0.1); border-radius: 50%; filter: blur(40px);"></div>
+    <div style="position: absolute; bottom: -50px; left: -50px; width: 250px; height: 250px; background: rgba(255,255,255,0.05); border-radius: 50%; filter: blur(40px);"></div>
+    
+    <div class="text-center position-relative z-2">
+        <div style="font-size: 3.5rem; margin-bottom: 20px; animation: float 3s ease-in-out infinite;">🚀</div>
+        <h1 style="font-size: 3rem; font-weight: 800; color: white; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.1);">Event & Community Board</h1>
+        <p style="font-size: 1.3rem; color: rgba(255,255,255,0.95); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">Connect with passionate people, discover amazing events, and build thriving communities</p>
+        
+        {% if user.is_authenticated %}
+            <p style="font-size: 1.1rem; color: rgba(255,255,255,0.9); margin-bottom: 30px;">Welcome back, <span style="font-weight: 700;">{{ user.username }}</span>! 🎉</p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="/events/" style="background: white; color: #2563eb; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.15);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.15)';">📅 Browse Events</a>
+                <a href="/communities/" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block; border: 2px solid white;" onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(0)';">👥 Explore Communities</a>
+            </div>
+        {% else %}
+            <p style="font-size: 1.1rem; color: rgba(255,255,255,0.9); margin-bottom: 30px;">Join thousands of people discovering events and building communities</p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="/accounts/login/" style="background: white; color: #2563eb; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block; box-shadow: 0 4px 15px rgba(0,0,0,0.15);" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.15)';">👤 Login</a>
+                <a href="/register/" style="background: rgba(255,255,255,0.2); color: white; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; display: inline-block; border: 2px solid white;" onmouseover="this.style.background='rgba(255,255,255,0.3)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.transform='translateY(0)';">✨ Sign Up</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- STATS SECTION -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-bottom: 70px;">
+    <div style="text-align: center; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-top: 4px solid #2563eb;">
+        <div style="font-size: 2.5rem; font-weight: 800; color: #2563eb; margin-bottom: 10px;">1000+</div>
+        <p style="color: #64748b; font-weight: 500; margin: 0;">Active Events</p>
+    </div>
+    <div style="text-align: center; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-top: 4px solid #10b981;">
+        <div style="font-size: 2.5rem; font-weight: 800; color: #10b981; margin-bottom: 10px;">500+</div>
+        <p style="color: #64748b; font-weight: 500; margin: 0;">Vibrant Communities</p>
+    </div>
+    <div style="text-align: center; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-top: 4px solid #06b6d4;">
+        <div style="font-size: 2.5rem; font-weight: 800; color: #06b6d4; margin-bottom: 10px;">5000+</div>
+        <p style="color: #64748b; font-weight: 500; margin: 0;">Community Members</p>
+    </div>
+</div>
+
+<!-- FEATURE CARDS SECTION -->
+<div style="margin-bottom: 70px;">
+    <h2 style="text-align: center; margin-bottom: 50px; font-size: 2rem; font-weight: 700;">Why Join Us?</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+        <!-- Feature 1 -->
+        <div style="background: white; border-radius: 12px; padding: 40px 30px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 30px rgba(37, 99, 235, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">  
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #2563eb, #06b6d4);"></div>
+            <div style="font-size: 3rem; margin-bottom: 15px;">📅</div>
+            <h5 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #0f172a;">Discover Events</h5>
+            <p style="color: #64748b; line-height: 1.6; margin: 0;">Find and join exciting events happening near you or online. From conferences to local meetups, discover what's happening in your area.</p>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div style="background: white; border-radius: 12px; padding: 40px 30px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 30px rgba(16, 185, 129, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">  
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #10b981, #06b6d4);"></div>
+            <div style="font-size: 3rem; margin-bottom: 15px;">👥</div>
+            <h5 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #0f172a;">Join Communities</h5>
+            <p style="color: #64748b; line-height: 1.6; margin: 0;">Connect with communities based on your interests. Find your tribe and engage with like-minded people who share your passions.</p>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div style="background: white; border-radius: 12px; padding: 40px 30px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.3s ease; position: relative; overflow: hidden;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 30px rgba(6, 182, 212, 0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)';">  
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #06b6d4, #2563eb);"></div>
+            <div style="font-size: 3rem; margin-bottom: 15px;">🌟</div>
+            <h5 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #0f172a;">Create & Share</h5>
+            <p style="color: #64748b; line-height: 1.6; margin: 0;">Host your own events and create communities. Be a leader and build the community you want to see in the world.</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA SECTION -->
+<div style="background: linear-gradient(135deg, #f3f4f6 0%, #fffbeb 100%); border-radius: 16px; padding: 60px 40px; text-align: center; margin-bottom: 40px; border: 2px solid #fbbf24;">
+    <h3 style="font-size: 2rem; font-weight: 700; margin-bottom: 15px; color: #0f172a;">Ready to Get Started?</h3>
+    <p style="color: #64748b; font-size: 1.1rem; margin-bottom: 30px; max-width: 500px; margin-left: auto; margin-right: auto;">Join thousands of people in our community and start discovering amazing events and connecting with like-minded individuals today.</p>
+    {% if not user.is_authenticated %}
+        <a href="/register/" style="display: inline-block; background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; padding: 14px 40px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(37, 99, 235, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(37, 99, 235, 0.3)';">Create Your Account Now →</a>
+    {% endif %}
+</div>
+
+<style>
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+</style>
+
+{% endblock %}
