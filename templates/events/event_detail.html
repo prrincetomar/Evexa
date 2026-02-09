@@ -75,7 +75,7 @@
                         <div class="alert alert-light border mb-3">
                             <p class="mb-2">{{ ann.message }}</p>
                             <small class="text-muted">By <strong>{{ ann.created_by.username }}</strong> on {{ ann.created_at|date:"M d, Y H:i" }}</small>
-                            {% if status == "CREATOR" and event.lifecycle not in "completed cancelled" %}
+                            {% if status == "CREATOR" and event.lifecycle not in ["completed", "cancelled"] %}
                                 <div class="mt-2">
                                     <a href="/events/announcements/edit/{{ ann.id }}/" class="btn btn-sm btn-outline-primary">✏️ Edit</a>
                                     <a href="/events/announcements/delete/{{ ann.id }}/" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this announcement?');">🗑 Delete</a>
@@ -87,7 +87,7 @@
                     <p class="text-muted">No announcements yet.</p>
                 {% endif %}
 
-                {% if status == "CREATOR" and event.lifecycle in "upcoming ongoing" %}
+                {% if status == "CREATOR" and event.lifecycle in ["upcoming", "ongoing"] %}
                     <hr>
                     <h6 class="mt-4">Post New Announcement</h6>
                     <form method="post" class="mt-3">
@@ -108,7 +108,7 @@
                 <h6 class="card-title mb-3">Actions</h6>
                 {% if user.is_authenticated %}
                     {% if status == "CREATOR" %}
-                        {% if event.lifecycle in "upcoming ongoing" %}
+                        {% if event.lifecycle in ["upcoming", "ongoing"] %}
                             <a href="/events/edit/{{ event.id }}/" class="btn btn-primary w-100 mb-2">✏️ Edit Event</a>
                             <a href="/events/cancel/{{ event.id }}/" class="btn btn-warning w-100">❌ Cancel Event</a>
                         {% else %}

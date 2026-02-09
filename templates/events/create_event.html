@@ -92,9 +92,9 @@
 
                     <div id="tag-container" class="mb-3" style="display: flex; flex-wrap: wrap; gap: 10px;">
                         {% for checkbox in form.tags %}
-                            <label class="tag-pill" style="display: inline-block; padding: 8px 16px; border: 2px solid #e2e8f0; border-radius: 20px; background: white; cursor: pointer; transition: all 0.3s ease; font-weight: 500; user-select: none;">
-                                <input type="checkbox" name="tags" value="{{ checkbox.data.value }}" id="{{ checkbox.id_for_label }}" style="margin-right: 8px; cursor: pointer;">
-                                {{ checkbox.choice_label }}
+                            <label class="tag-pill" for="{{ checkbox.id_for_label }}">
+                                {{ checkbox.tag }}
+                                <span>{{ checkbox.choice_label }}</span>
                             </label>
                         {% endfor %}
                     </div>
@@ -121,41 +121,34 @@
 
 <script>
     const maxTags = 5;
-    const tagPills = document.querySelectorAll(".tag-pill");
     const warning = document.getElementById("tag-warning");
+    const tagPills = Array.from(document.querySelectorAll("#tag-container .tag-pill"));
 
-    tagPills.forEach(pill => {
-        const checkbox = pill.querySelector("input");
+    const checkedCount = () => document.querySelectorAll("#tag-container input[type='checkbox']:checked").length;
 
-        if (checkbox.checked) {
-            pill.style.background = "#dbeafe";
-            pill.style.borderColor = "#2563eb";
-            pill.style.color = "#1e40af";
+    const syncState = (pill, checkbox) => {
+        pill.classList.toggle("selected", checkbox.checked);
+    };
+
+    tagPills.forEach((pill) => {
+        const checkbox = pill.querySelector("input[type='checkbox']");
+        if (!checkbox) {
+            return;
         }
 
-        pill.addEventListener("click", function (e) {
-            if (!checkbox.checked) {
-                const checkedCount = document.querySelectorAll(".tag-pill input:checked").length;
-                if (checkedCount >= maxTags) {
-                    warning.style.display = "block";
-                    return;
-                }
-            }
+        syncState(pill, checkbox);
 
-            checkbox.checked = !checkbox.checked;
-            
-            if (checkbox.checked) {
-                pill.style.background = "#dbeafe";
-                pill.style.borderColor = "#2563eb";
-                pill.style.color = "#1e40af";
-            } else {
-                pill.style.background = "white";
-                pill.style.borderColor = "#e2e8f0";
-                pill.style.color = "#334155";
+        pill.addEventListener("click", (event) => {
+            if (!checkbox.checked && checkedCount() >= maxTags) {
+                warning.style.display = "block";
+                event.preventDefault();
+                event.stopPropagation();
+                return;
             }
-            
             warning.style.display = "none";
         });
+
+        checkbox.addEventListener("change", () => syncState(pill, checkbox));
     });
 </script>
 

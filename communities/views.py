@@ -221,8 +221,8 @@ def create_community(request):
             CommunityMember.objects.create(
                 user=request.user,
                 community=community
-        )
-        return redirect('/communities/')
+            )
+            return redirect('/communities/')
     else:
         form = CommunityForm()
 

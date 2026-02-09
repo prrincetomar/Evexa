@@ -203,13 +203,37 @@ document.addEventListener("DOMContentLoaded", function () {
     const checkboxes = document.querySelectorAll("#fav-tags input[type='checkbox']");
     const maxAllowed = 5;
 
+    const checkedCount = () => document.querySelectorAll(
+        "#fav-tags input[type='checkbox']:checked"
+    ).length;
+
+    const syncPill = (pill, checkbox) => {
+        pill.classList.toggle("selected", checkbox.checked);
+    };
+
+    document.querySelectorAll("#fav-tags .tag-pill").forEach((pill) => {
+        const checkbox = pill.querySelector("input[type='checkbox']");
+        if (!checkbox) {
+            return;
+        }
+
+        syncPill(pill, checkbox);
+
+        pill.addEventListener("click", (event) => {
+            if (!checkbox.checked && checkedCount() >= maxAllowed) {
+                event.preventDefault();
+                event.stopPropagation();
+                alert("You can select up to 5 favourite interests only.");
+                return;
+            }
+        });
+
+        checkbox.addEventListener("change", () => syncPill(pill, checkbox));
+    });
+
     checkboxes.forEach(function (checkbox) {
         checkbox.addEventListener("change", function () {
-            const checkedCount = document.querySelectorAll(
-                "#fav-tags input[type='checkbox']:checked"
-            ).length;
-
-            if (checkedCount > maxAllowed) {
+            if (checkedCount() > maxAllowed) {
                 this.checked = false;
                 alert("You can select up to 5 favourite interests only.");
             }

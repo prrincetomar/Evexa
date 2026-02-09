@@ -145,6 +145,8 @@ h4, h5, h6 {
     font-weight: 500;
     transition: all 0.3s ease;
     font-size: 0.9rem;
+    position: relative;
+    overflow: hidden;
 }
 
 .tag-pill:hover {
@@ -162,6 +164,23 @@ h4, h5, h6 {
 
 .tag-pill input {
     display: none;
+}
+
+.tag-pill input[type="checkbox"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.tag-pill:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    border-color: var(--primary);
+}
+
+.tag-pill input[type="checkbox"]:focus + span {
+    color: var(--primary);
 }
 
 /* ===== CARDS ===== */
